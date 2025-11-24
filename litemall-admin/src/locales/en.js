@@ -51,6 +51,8 @@ export default {
       stat_user: 'User stats',
       stat_order: 'Order stats',
       stat_goods: 'Goods stats',
+      stat_comment: 'Rating stats',
+      stat_comment_wordcloud: 'Comment wordcloud',
       external_link: 'External links',
       external_link_tencent_cos: 'Tencent cloud storage',
       external_link_tencent_sms: 'Tencent cloud SMS',
@@ -86,6 +88,73 @@ export default {
       list_loading: 'Loading...'
     }
   },
+  stat_order_page: {
+    filter: {
+      period: 'Period',
+      category: 'Category'
+    },
+    period: {
+      day: 'Daily',
+      month: 'Monthly',
+      quarter: 'Quarterly',
+      year: 'Yearly'
+    },
+    category: {
+      all: 'All categories'
+    },
+    chart: {
+      orders: 'Orders',
+      customers: 'Customers',
+      amount: 'Order amount',
+      pcr: 'Average order value'
+    }
+  },
+  stat_comment_page: {
+    filter: {
+      categoryL1: 'Category (L1)',
+      categoryL2: 'Category (L2)',
+      order: 'Avg rating order'
+    },
+    category: {
+      all: 'All categories',
+      placeholder: 'Pick a category',
+      child_placeholder: 'Pick a subcategory'
+    },
+    order: {
+      desc: 'High to low',
+      asc: 'Low to high'
+    },
+    table: {
+      goodsId: 'Goods ID',
+      goodsName: 'Goods name',
+      categoryName: 'Category',
+      avgStar: 'Average score',
+      userCount: 'Rating users'
+    },
+    message: {
+      empty: 'No rating data for now'
+    }
+  },
+  stat_comment_wordcloud_page: {
+    filter: {
+      goodsId: 'Goods ID',
+      categoryL1: 'Category (L1)',
+      categoryL2: 'Category (L2)',
+      sample: 'Comments sampled',
+      top: 'Top words'
+    },
+    placeholder: {
+      goodsId: 'Enter goods ID',
+      categoryL1: 'Select L1 category',
+      categoryL2: 'Select L2 category'
+    },
+    category: {
+      all: 'All categories'
+    },
+    button: {
+      reset: 'Reset'
+    }
+  },
   login: {
     page: {
       title: 'Admin login'
@@ -119,6 +188,9 @@ export default {
       goods_total: 'Goods',
       product_total: 'Products',
       order_total: 'Orders'
+    },
+    message: {
+      no_permission: 'No permission to access this page'
     }
   },
   user_user: {
@@ -185,11 +257,18 @@ export default {
       id: 'ID',
       user_id: 'User ID',
       goods_id: 'Goods ID',
-      add_time: 'Time added'
+      add_time: 'Time added',
+      actions: 'Actions'
     },
     placeholder: {
       filter_user_id: 'User ID',
       filter_goods_id: 'Goods ID'
+    },
+    message: {
+      delete_confirm: 'Delete this footprint record?',
+      delete_success: 'Footprint deleted',
+      batch_delete_confirm: 'Delete the selected {count} footprint records?',
+      batch_delete_success: 'Selected footprints deleted'
     }
   },
   user_history: {
@@ -582,10 +661,11 @@ export default {
     table: {
       user_id: 'User ID',
       value_id: 'Item ID',
+      goods_name: 'Goods Name',
+      category_name: 'Category',
       star: 'Rating',
       content: 'Content',
-      pic_urls: 'Pictures',
-      add_time: 'Time added',
+      add_time: 'Date',
       actions: 'Actions'
     },
     dialog: {
@@ -595,8 +675,7 @@ export default {
       content: 'Content'
     },
     placeholder: {
-      filter_user_id: 'User ID',
-      filter_value_id: 'Item ID'
+      filter_keyword: 'Enter user ID or goods name'
     }
   },
   promotion_ad: {
@@ -862,7 +941,8 @@ export default {
       comment: 'Comment'
     },
     placeholder: {
-      filter_name: 'Admin'
+      filter_name: 'Admin',
+      filter_status: 'Status'
     },
     value: {
       status_success: 'Success',

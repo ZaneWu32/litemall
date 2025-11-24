@@ -3,7 +3,7 @@
 
     <el-row :gutter="40" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
+        <div class="card-panel" @click="handleCardClick('user')">
           <div class="card-panel-icon-wrapper icon-people">
             <svg-icon icon-class="peoples" class-name="card-panel-icon" />
           </div>
@@ -14,7 +14,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('messages')">
+        <div class="card-panel" @click="handleCardClick('goods')">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="message" class-name="card-panel-icon" />
           </div>
@@ -25,7 +25,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('purchases')">
+        <div class="card-panel" @click="handleCardClick('product')">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="message" class-name="card-panel-icon" />
           </div>
@@ -36,7 +36,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+        <div class="card-panel" @click="handleCardClick('order')">
           <div class="card-panel-icon-wrapper icon-shoppingCard">
             <svg-icon icon-class="money" class-name="card-panel-icon" />
           </div>
@@ -51,6 +51,25 @@
 </template>
 
 <script>
+const CARD_ROUTE_MAP = {
+  user: {
+    path: '/user/user',
+    perm: 'GET /admin/user/list'
+  },
+  goods: {
+    path: '/goods/list',
+    perm: 'GET /admin/goods/list'
+  },
+  product: {
+    path: '/goods/list',
+    perm: 'GET /admin/goods/list'
+  },
+  order: {
+    path: '/mall/order',
+    perm: 'GET /admin/order/list'
+  }
+}
+
 import { info } from '@/api/dashboard'
 import CountTo from 'vue-count-to'
 
@@ -66,6 +85,11 @@ export default {
       orderTotal: 0
     }
   },
+  computed: {
+    perms() {
+      return this.$store.getters.perms || []
+    }
+  },
   created() {
     info().then(response => {
       this.userTotal = response.data.data.userTotal
@@ -75,8 +99,18 @@ export default {
     })
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+    handleCardClick(type) {
+      const target = CARD_ROUTE_MAP[type]
+      if (!target) {
+        return
+      }
+      const hasWildcard = this.perms.includes('*')
+      const hasPerm = hasWildcard || (target.perm ? this.perms.includes(target.perm) : true)
+      if (!hasPerm) {
+        this.$message.warning(this.$t('dashboard.message.no_permission'))
+        return
+      }
+      this.$router.push(target.path)
     }
   }
 }

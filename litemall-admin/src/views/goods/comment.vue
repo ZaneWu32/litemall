@@ -3,8 +3,7 @@
 
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-input v-model="listQuery.userId" clearable class="filter-item" style="width: 200px;" :placeholder="$t('goods_comment.placeholder.filter_user_id')" />
-      <el-input v-model="listQuery.valueId" clearable class="filter-item" style="width: 200px;" :placeholder="$t('goods_comment.placeholder.filter_value_id')" />
+      <el-input v-model="listQuery.keyword" clearable class="filter-item" style="width: 260px;" :placeholder="$t('goods_comment.placeholder.filter_keyword')" @keyup.enter.native="handleFilter" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('app.button.search') }}</el-button>
       <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('app.button.download') }}</el-button>
     </div>
@@ -16,17 +15,19 @@
 
       <el-table-column align="center" :label="$t('goods_comment.table.value_id')" prop="valueId" />
 
-      <el-table-column align="center" :label="$t('goods_comment.table.star')" prop="star" />
+      <el-table-column align="center" min-width="160px" :label="$t('goods_comment.table.goods_name')" prop="goodsName" />
+
+      <el-table-column align="center" min-width="140px" :label="$t('goods_comment.table.category_name')" prop="categoryName" />
+
+      <el-table-column align="center" :label="$t('goods_comment.table.star')" prop="star" sortable />
 
       <el-table-column align="center" :label="$t('goods_comment.table.content')" prop="content" />
 
-      <el-table-column align="center" :label="$t('goods_comment.table.pic_urls')" prop="picUrls">
+      <el-table-column align="center" :label="$t('goods_comment.table.add_time')" prop="addTime">
         <template slot-scope="scope">
-          <el-image v-for="item in scope.row.picUrls" :key="item" :src="item" :preview-src-list="scope.row.picUrls" :lazy="true" style="width: 40px; height: 40px; margin-right: 5px;" />
+          {{ formatDate(scope.row.addTime) }}
         </template>
       </el-table-column>
-
-      <el-table-column align="center" :label="$t('goods_comment.table.add_time')" prop="addTime" />
 
       <el-table-column align="center" :label="$t('goods_comment.table.actions')" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -70,8 +71,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        userId: undefined,
-        valueId: undefined,
+        keyword: undefined,
         sort: 'add_time',
         order: 'desc'
       },
@@ -135,11 +135,21 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['评论ID', '用户ID', '商品ID', '评论', '评论图片列表', '评论时间']
-        const filterVal = ['id', 'userId', 'valueId', 'content', 'picUrls', 'addTime']
-        excel.export_json_to_excel2(tHeader, this.list, filterVal, '商品评论信息')
+        const tHeader = ['评论ID', '用户ID', '商品ID', '商品名称', '商品类别', '评分', '评论内容', '评论日期']
+        const filterVal = ['id', 'userId', 'valueId', 'goodsName', 'categoryName', 'star', 'content', 'addTime']
+        const formatted = this.list.map(item => ({
+          ...item,
+          addTime: this.formatDate(item.addTime)
+        }))
+        excel.export_json_to_excel2(tHeader, formatted, filterVal, '商品评论信息')
         this.downloadLoading = false
       })
+    },
+    formatDate(value) {
+      if (!value) {
+        return '-'
+      }
+      return value.toString().slice(0, 10)
     }
   }
 }

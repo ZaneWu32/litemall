@@ -38,6 +38,18 @@ public class LitemallFootprintService {
         footprintMapper.logicalDeleteByPrimaryKey(id);
     }
 
+    public void deleteByIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return;
+        }
+        LitemallFootprintExample example = new LitemallFootprintExample();
+        example.or().andIdIn(ids).andDeletedEqualTo(false);
+        LitemallFootprint footprint = new LitemallFootprint();
+        footprint.setUpdateTime(LocalDateTime.now());
+        footprint.setDeleted(true);
+        footprintMapper.updateByExampleSelective(footprint, example);
+    }
+
     public void add(LitemallFootprint footprint) {
         footprint.setAddTime(LocalDateTime.now());
         footprint.setUpdateTime(LocalDateTime.now());

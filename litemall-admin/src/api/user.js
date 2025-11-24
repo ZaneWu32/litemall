@@ -63,3 +63,19 @@ export function listHistory(query) {
     params: query
   })
 }
+
+export function deleteFootprint(data) {
+  return request({
+    url: '/footprint/delete',
+    method: 'post',
+    data
+  })
+}
+
+export function batchDeleteFootprint(ids) {
+  return request({
+    url: '/footprint/batch-delete',
+    method: 'post',
+    data: { ids }
+  })
+}

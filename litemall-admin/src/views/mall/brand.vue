@@ -23,7 +23,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" min-width="400px" :label="$t('mall_brand.table.desc')" prop="desc" />
+      <el-table-column header-align="center" align="left" min-width="400px" :label="$t('mall_brand.table.desc')" prop="desc" />
 
       <el-table-column align="center" :label="$t('mall_brand.table.floor_price')" prop="floorPrice" />
 

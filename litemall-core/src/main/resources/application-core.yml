@@ -2,7 +2,7 @@ litemall:
   # 开发者应该设置成自己的wx相关信息
   wx:
     app-id: wxa5b486c6b918ecfb
-        app-secret: YOUR_WX_APP_SECRET
+    app-secret: e04004829d4c383b4db7769d88dfbca1
     mch-id: 111111
     mch-key: xxxxxx
     notify-url: http://www.example.com/wx/order/pay-notify
@@ -100,9 +100,9 @@ litemall:
       bucketName: litemall
     # 腾讯对象存储配置信息
     # 请参考 https://cloud.tencent.com/document/product/436/6249
-        tencent:
-      secretId: YOUR_TENCENT_STORAGE_SECRET_ID
-      secretKey: YOUR_TENCENT_STORAGE_SECRET_KEY
+    tencent:
+      secretId: xxxxx
+      secretKey: xxxxx
       region: ap-shanghai
       bucketName: vytech-1300096589
     # 七牛云对象存储配置信息

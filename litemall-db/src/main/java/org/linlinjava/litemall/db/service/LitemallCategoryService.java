@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -92,5 +93,14 @@ public class LitemallCategoryService {
         LitemallCategoryExample example = new LitemallCategoryExample();
         example.or().andLevelEqualTo("L1").andDeletedEqualTo(false);
         return categoryMapper.selectByExampleSelective(example, CHANNEL);
+    }
+
+    public List<LitemallCategory> queryByIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+        LitemallCategoryExample example = new LitemallCategoryExample();
+        example.or().andIdIn(ids).andDeletedEqualTo(false);
+        return categoryMapper.selectByExample(example);
     }
 }

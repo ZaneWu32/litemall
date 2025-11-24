@@ -30,7 +30,7 @@ public class StatMapperTest {
 
     @Test
     public void testOrder() {
-        List<Map> result = statMapper.statOrder();
+        List<Map> result = statMapper.statOrder("day", 0);
         for (Map m : result) {
             m.forEach((k, v) -> System.out.println("key:value = " + k + ":" + v));
         }

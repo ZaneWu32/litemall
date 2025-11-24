@@ -10,14 +10,46 @@
     </select>
     <select id="statOrder" resultType="map">
         select
-        substr(add_time,1,10) as day,
-        count(id) as orders,
-        count(distinct user_id) as customers,
-        sum(actual_price) as amount,
-        round(sum(actual_price)/count(distinct user_id),2) as pcr
-        from litemall_order
-        where order_status in(401,402)
-        group by substr(add_time,1,10)
+        <choose>
+            <when test="period == 'month'">
+                DATE_FORMAT(t.add_time, '%Y-%m')
+            </when>
+            <when test="period == 'quarter'">
+                CONCAT(DATE_FORMAT(t.add_time, '%Y'), '-Q', QUARTER(t.add_time))
+            </when>
+            <when test="period == 'year'">
+                DATE_FORMAT(t.add_time, '%Y')
+            </when>
+            <otherwise>
+                DATE_FORMAT(t.add_time, '%Y-%m-%d')
+            </otherwise>
+        </choose>
+        as day,
+        count(distinct t.id) as orders,
+        count(distinct t.user_id) as customers,
+        sum(t.actual_price) as amount,
+        round(sum(t.actual_price)/count(distinct t.user_id),2) as pcr
+        from (
+            select distinct
+            o.id,
+            o.user_id,
+            o.actual_price,
+            o.add_time
+            from litemall_order o
+            <if test="categoryId != null and categoryId != 0">
+                inner join litemall_order_goods og on og.order_id = o.id
+                inner join litemall_goods g on g.id = og.goods_id
+            </if>
+            where o.order_status in(401,402)
+            <if test="categoryId != null and categoryId != 0">
+                and (
+                    g.category_id = #{categoryId}
+                    or g.category_id in (select id from litemall_category where pid = #{categoryId})
+                )
+            </if>
+        ) t
+        group by day
+        order by day
     </select>
     <select id="statGoods" resultType="map">
         select
@@ -27,5 +59,62 @@
         sum(number*price) as amount
         from litemall_order_goods
         group by substr(add_time,1, 10)
+    </select>
+    <select id="statGoodsComment" resultType="map">
+        select
+        g.id as goodsId,
+        g.name as goodsName,
+        cat.name as categoryName,
+        round(avg(c.star), 2) as avgStar,
+        count(distinct c.user_id) as userCount
+        from litemall_comment c
+        inner join litemall_goods g on g.id = c.value_id
+        left join litemall_category cat on cat.id = g.category_id
+        where c.type = 0
+        and c.deleted = 0
+        <if test="categoryId != null and categoryId != 0">
+            and (
+                g.category_id = #{categoryId}
+                or g.category_id in (
+                    select id from litemall_category where pid = #{categoryId}
+                )
+            )
+        </if>
+        group by g.id, g.name, cat.name
+        <choose>
+            <when test="order != null and order == 'asc'">
+                order by avgStar asc, userCount desc, goodsId asc
+            </when>
+            <otherwise>
+                order by avgStar desc, userCount desc, goodsId asc
+            </otherwise>
+        </choose>
+    </select>
+    <select id="listCommentContents" resultType="string">
+        select
+        c.content
+        from litemall_comment c
+        <if test="categoryId != null and categoryId != 0">
+            inner join litemall_goods g on g.id = c.value_id
+        </if>
+        where c.type = 0
+        and c.deleted = 0
+        and c.content is not null
+        and c.content != ''
+        <if test="goodsId != null and goodsId != 0">
+            and c.value_id = #{goodsId}
+        </if>
+        <if test="categoryId != null and categoryId != 0">
+            and (
+                g.category_id = #{categoryId}
+                or g.category_id in (
+                    select id from litemall_category where pid = #{categoryId}
+                )
+            )
+        </if>
+        order by c.add_time desc
+        <if test="limit != null and limit &gt; 0">
+            limit #{limit}
+        </if>
     </select>
 </mapper>

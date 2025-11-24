@@ -23,3 +23,19 @@ export function statGoods(query) {
     params: query
   })
 }
+
+export function statComment(query) {
+  return request({
+    url: '/stat/comment',
+    method: 'get',
+    params: query
+  })
+}
+
+export function statCommentWordcloud(query) {
+  return request({
+    url: '/stat/comment/wordcloud',
+    method: 'get',
+    params: query
+  })
+}

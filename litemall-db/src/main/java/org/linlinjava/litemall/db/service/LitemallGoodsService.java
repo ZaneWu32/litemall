@@ -257,4 +257,19 @@ public class LitemallGoodsService {
         example.or().andIdIn(Arrays.asList(ids)).andIsOnSaleEqualTo(true).andDeletedEqualTo(false);
         return goodsMapper.selectByExampleSelective(example, columns);
     }
+
+    public List<LitemallGoods> queryByIds(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+        LitemallGoodsExample example = new LitemallGoodsExample();
+        example.or().andIdIn(ids).andDeletedEqualTo(false);
+        return goodsMapper.selectByExampleSelective(example, new Column[]{Column.id, Column.name, Column.categoryId});
+    }
+
+    public List<LitemallGoods> queryByNameLike(String name) {
+        LitemallGoodsExample example = new LitemallGoodsExample();
+        example.or().andNameLike("%" + name + "%").andDeletedEqualTo(false);
+        return goodsMapper.selectByExampleSelective(example, new Column[]{Column.id, Column.name, Column.categoryId});
+    }
 }

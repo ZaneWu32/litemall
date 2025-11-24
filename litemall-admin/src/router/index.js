@@ -118,7 +118,7 @@ export const asyncRoutes = [
         component: () => import('@/views/user/footprint'),
         name: 'footprint',
         meta: {
-          perms: ['GET /admin/footprint/list'],
+          perms: ['GET /admin/footprint/list', 'POST /admin/footprint/delete', 'POST /admin/footprint/batch-delete'],
           title: 'app.menu.user_footprint',
           noCache: true
         }
@@ -536,6 +536,26 @@ export const asyncRoutes = [
         meta: {
           perms: ['GET /admin/stat/goods'],
           title: 'app.menu.stat_goods',
+          noCache: true
+        }
+      },
+      {
+        path: 'comment',
+        component: () => import('@/views/stat/comment'),
+        name: 'statComment',
+        meta: {
+          perms: ['GET /admin/stat/comment'],
+          title: 'app.menu.stat_comment',
+          noCache: true
+        }
+      },
+      {
+        path: 'comment-wordcloud',
+        component: () => import('@/views/stat/commentWordcloud'),
+        name: 'statCommentWordcloud',
+        meta: {
+          perms: ['GET /admin/stat/comment/wordcloud'],
+          title: 'app.menu.stat_comment_wordcloud',
           noCache: true
         }
       }

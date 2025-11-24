@@ -51,6 +51,8 @@ export default {
       stat_user: '用户统计',
       stat_order: '订单统计',
       stat_goods: '商品统计',
+      stat_comment: '商品打分统计',
+      stat_comment_wordcloud: '商品评论词云',
       external_link: '外链',
       external_link_tencent_cos: '腾讯云存储',
       external_link_tencent_sms: '腾讯云短信',
@@ -86,6 +88,73 @@ export default {
       list_loading: '正在查询中。。。'
     }
   },
+  stat_order_page: {
+    filter: {
+      period: '时间粒度',
+      category: '商品类别'
+    },
+    period: {
+      day: '按日',
+      month: '按月',
+      quarter: '按季度',
+      year: '按年'
+    },
+    category: {
+      all: '所有类别'
+    },
+    chart: {
+      orders: '订单量',
+      customers: '下单用户',
+      amount: '订单总额',
+      pcr: '客单价'
+    }
+  },
+  stat_comment_page: {
+    filter: {
+      categoryL1: '一级类目',
+      categoryL2: '二级类目',
+      order: '平均分排序'
+    },
+    category: {
+      all: '全部类目',
+      placeholder: '请选择一级类目',
+      child_placeholder: '请选择二级类目'
+    },
+    order: {
+      desc: '从高到低',
+      asc: '从低到高'
+    },
+    table: {
+      goodsId: '商品ID',
+      goodsName: '商品名称',
+      categoryName: '商品类别',
+      avgStar: '平均分',
+      userCount: '评分用户数'
+    },
+    message: {
+      empty: '暂无评分数据'
+    }
+  },
+  stat_comment_wordcloud_page: {
+    filter: {
+      goodsId: '商品ID',
+      categoryL1: '一级类目',
+      categoryL2: '二级类目',
+      sample: '采样评论数',
+      top: '关键词数量'
+    },
+    placeholder: {
+      goodsId: '输入商品ID',
+      categoryL1: '请选择一级类目',
+      categoryL2: '请选择二级类目'
+    },
+    category: {
+      all: '全部类目'
+    },
+    button: {
+      reset: '重置'
+    }
+  },
   login: {
     page: {
       title: '管理员登录'
@@ -119,6 +188,9 @@ export default {
       goods_total: '商品数量',
       product_total: '货品数量',
       order_total: '订单数量'
+    },
+    message: {
+      no_permission: '暂无权限访问该页面'
     }
   },
   user_user: {
@@ -185,11 +257,18 @@ export default {
       id: '足迹ID',
       user_id: '用户ID',
       goods_id: '商品ID',
-      add_time: '添加时间'
+      add_time: '添加时间',
+      actions: '操作'
     },
     placeholder: {
       filter_user_id: '请输入用户ID',
       filter_goods_id: '请输入商品ID'
+    },
+    message: {
+      delete_confirm: '确认删除该条足迹记录吗？',
+      delete_success: '删除成功',
+      batch_delete_confirm: '确认删除选中的 {count} 条足迹记录吗？',
+      batch_delete_success: '批量删除成功'
     }
   },
   user_history: {
@@ -582,10 +661,11 @@ export default {
     table: {
       user_id: '用户ID',
       value_id: '商品ID',
+      goods_name: '商品名称',
+      category_name: '商品类别',
       star: '打分',
       content: '评论内容',
-      pic_urls: '评论图片',
-      add_time: '时间',
+      add_time: '评论日期',
       actions: '操作'
     },
     dialog: {
@@ -595,8 +675,7 @@ export default {
       content: '回复内容'
     },
     placeholder: {
-      filter_user_id: '请输入用户ID',
-      filter_value_id: '请输入商品ID'
+      filter_keyword: '请输入用户ID或商品名称'
     }
   },
   promotion_ad: {
@@ -862,7 +941,8 @@ export default {
       comment: '备注信息'
     },
     placeholder: {
-      filter_name: '请输入操作管理员'
+      filter_name: '请输入操作管理员',
+      filter_status: '请选择操作状态'
     },
     value: {
       status_success: '成功',

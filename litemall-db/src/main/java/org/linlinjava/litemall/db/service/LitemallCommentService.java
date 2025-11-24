@@ -4,17 +4,22 @@ import com.github.pagehelper.PageHelper;
 import org.linlinjava.litemall.db.dao.LitemallCommentMapper;
 import org.linlinjava.litemall.db.domain.LitemallComment;
 import org.linlinjava.litemall.db.domain.LitemallCommentExample;
+import org.linlinjava.litemall.db.domain.LitemallGoods;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LitemallCommentService {
     @Resource
     private LitemallCommentMapper commentMapper;
+    @Resource
+    private LitemallGoodsService goodsService;
 
     public List<LitemallComment> queryGoodsByGid(Integer id, int offset, int limit) {
         LitemallCommentExample example = new LitemallCommentExample();
@@ -56,19 +61,31 @@ public class LitemallCommentService {
         return commentMapper.insertSelective(comment);
     }
 
-    public List<LitemallComment> querySelective(String userId, String valueId, Integer page, Integer size, String sort, String order) {
+    public List<LitemallComment> querySelective(String userId, String valueId, String goodsName, Integer page, Integer size, String sort, String order) {
         LitemallCommentExample example = new LitemallCommentExample();
         LitemallCommentExample.Criteria criteria = example.createCriteria();
 
-        // type=2 是订单商品回复，这里过滤
-        criteria.andTypeNotEqualTo((byte) 2);
+        criteria.andTypeEqualTo((byte) 0);
 
         if (!StringUtils.isEmpty(userId)) {
             criteria.andUserIdEqualTo(Integer.valueOf(userId));
         }
+
         if (!StringUtils.isEmpty(valueId)) {
-            criteria.andValueIdEqualTo(Integer.valueOf(valueId)).andTypeEqualTo((byte) 0);
+            criteria.andValueIdEqualTo(Integer.valueOf(valueId));
         }
+
+        List<Integer> goodsIds = null;
+        if (!StringUtils.isEmpty(goodsName)) {
+            List<LitemallGoods> goodsList = goodsService.queryByNameLike(goodsName);
+            goodsIds = goodsList.stream().map(LitemallGoods::getId).collect(Collectors.toList());
+            if (goodsIds.isEmpty()) {
+                goodsIds = new ArrayList<>();
+                goodsIds.add(-1);
+            }
+            criteria.andValueIdIn(goodsIds);
+        }
+
         criteria.andDeletedEqualTo(false);
 
         if (!StringUtils.isEmpty(sort) && !StringUtils.isEmpty(order)) {

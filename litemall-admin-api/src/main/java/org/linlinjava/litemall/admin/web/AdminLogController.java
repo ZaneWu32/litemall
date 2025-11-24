@@ -31,11 +31,14 @@ public class AdminLogController {
     @RequiresPermissionsDesc(menu = {"系统管理", "操作日志"}, button = "查询")
     @GetMapping("/list")
     public Object list(String name,
+                       Boolean status,
+                       String startTime,
+                       String endTime,
                        @RequestParam(defaultValue = "1") Integer page,
                        @RequestParam(defaultValue = "10") Integer limit,
                        @Sort @RequestParam(defaultValue = "add_time") String sort,
                        @Order @RequestParam(defaultValue = "desc") String order) {
-        List<LitemallLog> logList = logService.querySelective(name, page, limit, sort, order);
+        List<LitemallLog> logList = logService.querySelective(name, status, startTime, endTime, page, limit, sort, order);
         return ResponseUtil.okList(logList);
     }
 }

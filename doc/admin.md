@@ -33,7 +33,7 @@
 * 会员管理服务，见AdminUserController类
 * 收货地址服务，见AdminAddressController类
 * 会员收藏服务，见AdminCollectController类
-* 会员足迹服务，见AdminFootprintController类
+* 会员足迹服务（查询、单条删除、批量删除），见AdminFootprintController类
 * 搜索历史服务，见AdminHistoryController类
 * 意见反馈服务，见AdminFeedbackController类
 
@@ -68,6 +68,7 @@
 ### 4.1.7 其他服务
 
 * 统计服务，见AdminStatController类
+  * 支持用户、订单、商品趋势统计；商品打分统计接口（`/admin/stat/comment`）可按类目筛选并按平均分排序；评论词云接口（`/admin/stat/comment/wordcloud`）提供基于评论文本的高频词统计，支持按商品/类目采样。
 * 个人服务，见AdminProfileController类
 
 ### 4.1.8 安全

@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.linlinjava.litemall.admin.annotation.RequiresPermissionsDesc;
+import org.linlinjava.litemall.core.util.JacksonUtil;
 import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.core.validator.Order;
 import org.linlinjava.litemall.core.validator.Sort;
@@ -12,6 +13,8 @@ import org.linlinjava.litemall.db.service.LitemallFootprintService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +41,28 @@ public class AdminFootprintController {
         List<LitemallFootprint> footprintList = footprintService.querySelective(userId, goodsId, page, limit, sort,
                 order);
         return ResponseUtil.okList(footprintList);
+    }
+
+    @RequiresPermissions("admin:footprint:delete")
+    @RequiresPermissionsDesc(menu = {"用户管理", "用户足迹"}, button = "删除")
+    @PostMapping("/delete")
+    public Object delete(@RequestBody LitemallFootprint footprint) {
+        if (footprint == null || footprint.getId() == null) {
+            return ResponseUtil.badArgument();
+        }
+        footprintService.deleteById(footprint.getId());
+        return ResponseUtil.ok();
+    }
+
+    @RequiresPermissions("admin:footprint:batch-delete")
+    @RequiresPermissionsDesc(menu = {"用户管理", "用户足迹"}, button = "批量删除")
+    @PostMapping("/batch-delete")
+    public Object batchDelete(@RequestBody String body) {
+        List<Integer> ids = JacksonUtil.parseIntegerList(body, "ids");
+        if (ids == null || ids.size() == 0) {
+            return ResponseUtil.badArgument();
+        }
+        footprintService.deleteByIds(ids);
+        return ResponseUtil.ok();
     }
 }
